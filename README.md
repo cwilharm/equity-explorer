@@ -1,35 +1,35 @@
 # 🔬 GARCH Monte Carlo Equity Explorer
 
-Ein professionelles Streamlit-Tool für Monte-Carlo-Simulationen von Aktienkursen mit GARCH(1,1) Volatilitätsmodellierung.
+A professional Streamlit tool for Monte Carlo simulations of stock prices using GARCH(1,1) volatility modeling.
 
-## 📋 Übersicht
+## 📋 Overview
 
-Dieses Tool kombiniert **GARCH(1,1)** (Generalized Autoregressive Conditional Heteroskedasticity) mit **Geometric Brownian Motion (GBM)**, um realistische Aktienkurssimulationen mit zeitvariabler Volatilität zu erstellen.
+This tool combines **GARCH(1,1)** (Generalized Autoregressive Conditional Heteroskedasticity) with **Geometric Brownian Motion (GBM)** to create realistic stock price simulations with time-varying volatility.
 
-### Hauptfunktionen
+### Key Features
 
-- ✅ **GARCH(1,1) Volatilitätsmodellierung**: Erfasst Volatility Clustering und zeitvariante Marktbedingungen
-- ✅ **Monte Carlo Simulationen**: Tausende von möglichen Preispfaden in die Zukunft
-- ✅ **Risikoanalyse**: Value-at-Risk (VaR) und Expected Shortfall (ES/CVaR)
-- ✅ **Rolling Statistics**: 30- und 60-Tage rollende Drift und Volatilität
-- ✅ **P/E Ratio Adjustment**: Optional fundamentale Bewertung in Drift integrieren
-- ✅ **Interactive Visualisierungen**: Plotly Fan Charts, Histogramme, und mehr
-- ✅ **CSV Export**: Exportiere alle simulierten Pfade für weitere Analysen
+- ✅ **GARCH(1,1) Volatility Modeling**: Captures volatility clustering and time-varying market conditions
+- ✅ **Monte Carlo Simulations**: Thousands of potential price paths into the future
+- ✅ **Risk Analysis**: Value-at-Risk (VaR) and Expected Shortfall (ES/CVaR)
+- ✅ **Rolling Statistics**: 30- and 60-day rolling drift and volatility
+- ✅ **P/E Ratio Adjustment**: Optionally integrate fundamental valuation into drift
+- ✅ **Interactive Visualizations**: Plotly fan charts, histograms, and more
+- ✅ **CSV Export**: Export all simulated paths for further analysis
 
 ## 🚀 Installation
 
-### Voraussetzungen
+### Prerequisites
 
 - Python 3.8+
 - pip
 
-### Abhängigkeiten installieren
+### Install Dependencies
 
 ```bash
 pip install streamlit yfinance pandas numpy plotly arch scipy
 ```
 
-Oder mit einer `requirements.txt`:
+Or with a `requirements.txt`:
 
 ```bash
 pip install -r requirements.txt
@@ -46,227 +46,213 @@ arch>=6.2.0
 scipy>=1.11.0
 ```
 
-## 💻 Verwendung
+## 💻 Usage
 
-### App starten
+### Start the App
 
 ```bash
-streamlit run streanlit.py
+streamlit run streamlit.py
 ```
 
-Die App öffnet sich automatisch in Ihrem Browser unter `http://localhost:8501`
+The app will automatically open in your browser at `http://localhost:8501`
 
 ### Workflow
 
-1. **Ticker auswählen**: Geben Sie ein Yahoo Finance Ticker-Symbol ein (z.B. AAPL, MSFT, TSLA)
-2. **Zeitraum definieren**: Wählen Sie Start- und Enddatum für historische Daten
-3. **Simulation konfigurieren**:
-   - **Horizon (Tage)**: Wie weit in die Zukunft simulieren (z.B. 252 Tage = 1 Jahr)
-   - **Schritte pro Pfad**: Zeitauflösung der Simulation
-   - **Anzahl Pfade**: Mehr Pfade = genauere Statistiken, aber längere Rechenzeit
-   - **Random Seed**: Für reproduzierbare Ergebnisse
-4. **Optional**: P/E Ratio Adjustment aktivieren
-5. **Klick auf "🚀 Daten laden & simulieren"**
+1. **Select Ticker**: Enter a Yahoo Finance ticker symbol (e.g., AAPL, MSFT, TSLA)
+2. **Define Time Period**: Choose start and end dates for historical data
+3. **Configure Simulation**:
+   - **Horizon (Days)**: How far into the future to simulate (e.g., 252 days = 1 year)
+   - **Steps per Path**: Time resolution of the simulation
+   - **Number of Paths**: More paths = more accurate statistics, but longer computation time
+   - **Random Seed**: For reproducible results
+4. **Optional**: Enable P/E Ratio Adjustment
+5. **Click "🚀 Load Data & Simulate"**
 
-## 📊 Tabs und Visualisierungen
+## 📊 Tabs and Visualizations
 
-### Tab 1: Fan Chart & Pfade
-- Historische Kursentwicklung (schwarz)
-- 50 zufällig ausgewählte Simulationspfade (transparent)
-- Quantile Ribbons (5%-95%, 10%-90%, 25%-75%)
-- Median-Pfad (blau gestrichelt)
-- Rote vertikale Linie markiert das Horizon-Datum
+### Tab 1: Fan Chart & Paths
+- Historical price development (black)
+- 50 randomly selected simulation paths (transparent)
+- Quantile ribbons (5%-95%, 10%-90%, 25%-75%)
+- Median path (blue dashed)
+- Red vertical line marks the horizon date
 
-### Tab 2: Risikoanalyse (VaR/ES)
-- **Value-at-Risk (VaR)**: Maximaler erwarteter Verlust bei gegebenem Konfidenzniveau
-- **Expected Shortfall (ES)**: Durchschnittlicher Verlust im Tail-Risk-Szenario
-- Rendite-Verteilungs-Histogramm mit VaR/ES Markierungen
+### Tab 2: Risk Analysis (VaR/ES)
+- **Value-at-Risk (VaR)**: Maximum expected loss at a given confidence level
+- **Expected Shortfall (ES)**: Average loss in the tail-risk scenario
+- Return distribution histogram with VaR/ES markings
 
-### Tab 3: Verteilung Endpreise
-- Histogram der simulierten Endpreise nach dem Horizon
-- Aktueller Preis als Referenzlinie
-- Quantile-Tabelle (1%, 5%, 10%, 25%, 50%, 75%, 90%, 95%, 99%)
+### Tab 3: Distribution of End Prices
+- Histogram of simulated end prices after the horizon
+- Current price as a reference line
+- Quantile table (1%, 5%, 10%, 25%, 50%, 75%, 90%, 95%, 99%)
 
-### Tab 4: Rolling Statistiken
-- 30-Tage und 60-Tage rollende Drift (μ)
-- 30-Tage und 60-Tage rollende Volatilität (σ)
-- Historische Durchschnitte als Referenzlinien
-- Aktuelle Werte als Metriken
+### Tab 4: Rolling Statistics
+- 30-day and 60-day rolling drift (μ)
+- 30-day and 60-day rolling volatility (σ)
+- Historical averages as reference lines
+- Current values as metrics
 
-### Tab 5: Daten Export
-- CSV-Download aller simulierten Pfade
-- Statistik-Zusammenfassung
-- Datenformat: Datum × Pfade
+### Tab 5: Data Export
+- CSV download of all simulated paths
+- Summary statistics
+- Data format: Date × Paths
 
-## 🔧 Technische Details
+## 🔧 Technical Details
 
-### GARCH(1,1) Modell
+### GARCH(1,1) Model
 
-Das GARCH(1,1) Modell prognostiziert die bedingte Varianz:
+The GARCH(1,1) model predicts the conditional variance:
 
 ```
 h_t+1 = ω + α·ε²_t + β·h_t
 ```
 
-Wo:
-- **ω** (omega): Konstante
-- **α** (alpha): Gewicht vergangener Schocks
-- **β** (beta): Gewicht vergangener Volatilität
-- **h_t**: Bedingte Varianz zum Zeitpunkt t
+Where:
+- **ω** (omega): Constant
+- **α** (alpha): Weight of past shocks
+- **β** (beta): Weight of past volatility
+- **h_t**: Conditional variance at time t
 
-**Vorteile:**
-- Erfasst Volatility Clustering
-- Zeitvariante Volatilitätsschätzung
-- Realistischere Prognosen als konstante Volatilität
+**Advantages:**
+- Captures volatility clustering
+- Time-varying volatility estimation
+- More realistic forecasts than constant volatility
 
-### GBM mit GARCH-Volatilität
+### GBM with GARCH Volatility
 
 ```python
 S_t+1 = S_t × exp((μ - 0.5σ²_t)·dt + σ_t·√dt·Z_t)
 ```
 
-Wo:
-- **S_t**: Preis zum Zeitpunkt t
-- **μ**: Drift (annualisierte erwartete Rendite)
-- **σ_t**: GARCH-prognostizierte Volatilität (zeitvariant!)
-- **dt**: Zeitschrittgröße
-- **Z_t**: Standard-Normalverteilte Zufallsvariable
+Where:
+- **S_t**: Price at time t
+- **μ**: Drift (annualized expected return)
+- **σ_t**: GARCH-predicted volatility (time-varying!)
+- **dt**: Time step size
+- **Z_t**: Standard normally distributed random variable
 
 ### P/E Ratio Adjustment
 
-Wenn aktiviert:
+When enabled:
 ```
 μ_adjusted = μ_historical × adjustment_factor
 ```
 
-Wo:
+Where:
 ```
 adjustment_factor = clip(sector_PE / stock_PE, 0.5, 1.5)
 ```
 
-- Niedriger P/E → Höhere erwartete Rendite (unterbewertet)
-- Hoher P/E → Niedrigere erwartete Rendite (überbewertet)
+- Low P/E → Higher expected return (undervalued)
+- High P/E → Lower expected return (overvalued)
 
-## 📈 Beispiel-Anwendungsfälle
+## 📈 Example Use Cases
 
-### 1. Risikomanagement
-- Berechne VaR für Portfolio-Positionen
-- Stress-Testing mit verschiedenen Horizont-Zeiträumen
-- Expected Shortfall für Tail-Risk-Management
+### 1. Risk Management
+- Calculate VaR for portfolio positions
+- Stress-testing with various horizon periods
+- Expected Shortfall for tail-risk management
 
-### 2. Optionsbewertung (indicativ)
-- Verständnis möglicher Preisbewegungen
-- Implizite Volatilitätsschätzung
-- Szenario-Planung für Optionsstrategien
+### 2. Options Valuation (indicative)
+- Understanding potential price movements
+- Implied volatility estimation
+- Scenario planning for options strategies
 
 ### 3. Investment Planning
-- Langfristige Kursziele visualisieren
-- Wahrscheinlichkeit verschiedener Outcomes
-- Risiko-Rendite-Profile verstehen
+- Visualize long-term price targets
+- Probability of different outcomes
+- Understand risk-return profiles
 
 ### 4. Research & Education
-- GARCH-Modellierung lernen
-- Monte Carlo Simulationen verstehen
-- Zeitvariante Volatilität explorieren
+- Learn GARCH modeling
+- Understand Monte Carlo simulations
+- Explore time-varying volatility
 
-## 🎯 Parameter-Empfehlungen
+## 🎯 Parameter Recommendations
 
-| Verwendungszweck | Horizon | Schritte | Pfade | Seed |
-|------------------|---------|----------|-------|------|
-| Quick Check | 30-60 | 30-60 | 500 | 42 |
-| Tägliche Analyse | 252 | 252 | 1000-2000 | 42 |
-| Detaillierte Studie | 252-504 | 252-504 | 5000+ | 42 |
-| Forschung | 504+ | 504+ | 10000+ | variabel |
+| Use Case         | Horizon | Steps  | Paths   | Seed |
+|------------------|---------|--------|---------|------|
+| Quick Check      | 30-60   | 30-60  | 500     | 42   |
+| Daily Analysis    | 252     | 252    | 1000-2000 | 42   |
+| Detailed Study    | 252-504 | 252-504| 5000+   | 42   |
+| Research         | 504+    | 504+   | 10000+  | variable |
 
-**Rechenzeit** (ungefähr):
-- 1000 Pfade × 252 Schritte: ~2-5 Sekunden
-- 5000 Pfade × 252 Schritte: ~10-20 Sekunden
-- 10000 Pfade × 504 Schritte: ~1-2 Minuten
+**Computation Time** (approximately):
+- 1000 paths × 252 steps: ~2-5 seconds
+- 5000 paths × 252 steps: ~10-20 seconds
+- 10000 paths × 504 steps: ~1-2 minutes
 
-## ⚠️ Wichtige Hinweise
+## ⚠️ Important Notes
 
-### Limitationen
+### Limitations
 
-- **Keine Dividenden**: Modell ignoriert Dividendenzahlungen
-- **Keine Splits**: Stock Splits werden nicht berücksichtigt
-- **Normalverteilung**: GBM nimmt log-normale Renditen an (keine Fat Tails perfekt modelliert)
-- **Konstante Drift**: μ bleibt konstant (keine Regime-Switches)
-- **Historische Basis**: GARCH basiert auf Vergangenheitsdaten
+- **No Dividends**: Model ignores dividend payments
+- **No Splits**: Stock splits are not considered
+- **Normal Distribution**: GBM assumes log-normal returns (no fat tails perfectly modeled)
+- **Constant Drift**: μ remains constant (no regime switches)
+- **Historical Basis**: GARCH is based on historical data
 
-### Risiko-Disclaimer
+### Risk Disclaimer
 
-⚠️ **WICHTIG**: Dieses Tool ist ausschließlich für **Bildungs- und Forschungszwecke** gedacht.
+⚠️ **IMPORTANT**: This tool is intended solely for **educational and research purposes**.
 
-- ❌ **KEINE ANLAGEBERATUNG**
-- ❌ **KEINE GARANTIE** für zukünftige Ergebnisse
-- ❌ **KEINE EMPFEHLUNG** zum Kauf/Verkauf von Wertpapieren
+- ❌ **NO INVESTMENT ADVICE**
+- ❌ **NO GUARANTEE** for future results
+- ❌ **NO RECOMMENDATION** to buy/sell securities
 
-Vergangenheitsperformance ist kein Indikator für zukünftige Ergebnisse. Alle Simulationen sind rein illustrativ.
+Past performance is not indicative of future results. All simulations are purely illustrative.
 
-## 🐛 Bekannte Issues
+## 🐛 Known Issues
 
 ### Pandas Timestamp Errors
-**Problem**: Bei älteren Pandas-Versionen können Timestamp-Arithmetik-Fehler auftreten.
+**Problem**: Timestamp arithmetic errors may occur with older Pandas versions.
 
-**Lösung**: Aktualisieren Sie auf Pandas ≥2.0
+**Solution**: Upgrade to Pandas ≥2.0
 ```bash
 pip install --upgrade pandas
 ```
 
 ### GARCH Fitting Failures
-**Problem**: GARCH kann bei zu kurzen Zeitreihen oder extrem volatilen Daten fehlschlagen.
+**Problem**: GARCH may fail with too short time series or extremely volatile data.
 
-**Lösung**:
-- Verwenden Sie längere historische Zeiträume (min. 1 Jahr)
-- Prüfen Sie, ob Daten lückenlos sind
+**Solution**:
+- Use longer historical periods (min. 1 year)
+- Ensure data is complete
 
-### Memory Issues bei vielen Pfaden
-**Problem**: >10000 Pfade können RAM-Probleme verursachen.
+### Memory Issues with Many Paths
+**Problem**: >10000 paths may cause RAM issues.
 
-**Lösung**:
-- Reduzieren Sie Anzahl der Pfade
-- Erhöhen Sie verfügbaren RAM
-- Führen Sie Simulationen in Batches durch
+**Solution**:
+- Reduce the number of paths
+- Increase available RAM
+- Run simulations in batches
 
-## 🔄 Updates & Versionen
+## 🔄 Updates & Versions
 
-### Version 1.0 (Aktuell)
-- ✅ GARCH(1,1) Volatilitätsmodellierung
-- ✅ Monte Carlo GBM Simulationen
+### Version 1.0 (Current)
+- ✅ GARCH(1,1) volatility modeling
+- ✅ Monte Carlo GBM simulations
 - ✅ VaR & Expected Shortfall
-- ✅ Rolling Statistics
-- ✅ P/E Adjustment
-- ✅ Interactive Plotly Charts
-- ✅ CSV Export
+- ✅ Rolling statistics
+- ✅ P/E adjustment
+- ✅ Interactive Plotly charts
+- ✅ CSV export
 
-### Geplante Features
-- [ ] Regime-Switching Modelle
-- [ ] Jump-Diffusion für Extremereignisse
-- [ ] Portfolio-Simulationen (Multivariate)
-- [ ] GARCH-Varianten (EGARCH, GJR-GARCH)
-- [ ] Makro-Indikator Integration
-
-## 📚 Literatur & Referenzen
-
-### GARCH Models
-- Bollerslev, T. (1986). "Generalized Autoregressive Conditional Heteroskedasticity"
-- Engle, R. F. (1982). "Autoregressive Conditional Heteroscedasticity"
-
-### Monte Carlo Simulation
-- Glasserman, P. (2004). "Monte Carlo Methods in Financial Engineering"
-- Boyle, P. P. (1977). "Options: A Monte Carlo Approach"
-
-### Risk Management
-- Jorion, P. (2006). "Value at Risk: The New Benchmark for Managing Financial Risk"
-- McNeil, A. J., et al. (2005). "Quantitative Risk Management"
+### Planned Features
+- [ ] Regime-switching models
+- [ ] Jump-diffusion for extreme events
+- [ ] Portfolio simulations (multivariate)
+- [ ] GARCH variants (EGARCH, GJR-GARCH)
+- [ ] Macro indicator integration
 
 ## 🤝 Contribution
 
-Dieses Tool ist ein Bildungsprojekt. Verbesserungsvorschläge und Feedback sind willkommen!
+This tool is an educational project. Suggestions for improvements and feedback are welcome!
 
-## 📄 Lizenz
+## 📄 License
 
-Dieses Projekt ist für Bildungs- und Forschungszwecke frei verfügbar.
+This project is freely available for educational and research purposes.
 
 
 ---

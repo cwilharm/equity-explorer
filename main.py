@@ -18,13 +18,13 @@ st.set_page_config(page_title="GARCH Monte Carlo – Equity Explorer", layout="w
 st.title("🔬 Equity Explorer — GARCH(1,1) Monte‑Carlo Simulationen")
 st.markdown(
     """
-    Professionelles Tool mit **GARCH(1,1)** Volatilitätsmodellierung für zeitvariante Volatilität,
-    **Value-at-Risk** und **Expected Shortfall** Analysen.
+    Professional tool with **GARCH(1,1)** volatility modeling for time-varying volatility,
+    **value-at-risk**, and **expected shortfall** analyses.
     """
 )
 
 # ----- Sidebar inputs -----
-st.sidebar.header("📊 Eingaben")
+st.sidebar.header("📊 Inputs")
 
 with st.sidebar:
     ticker = st.text_input("Ticker (Yahoo)", value="AAPL")
@@ -33,37 +33,37 @@ with st.sidebar:
     with col1:
         start_date = st.date_input("Start", value=pd.to_datetime("2018-01-01"))
     with col2:
-        end_date = st.date_input("Ende", value=pd.to_datetime("today"))
+        end_date = st.date_input("End", value=pd.to_datetime("today"))
 
-    st.markdown("### Simulation Parameter")
-    horizon_days = st.number_input("Horizon (Tage)", min_value=1, value=252)
-    n_steps = st.number_input("Schritte pro Pfad", min_value=2, value=252)
-    n_paths = st.number_input("Anzahl Pfade", min_value=100, value=2000)
+    st.markdown("### Simulation Parameters")
+    horizon_days = st.number_input("Horizon (Days)", min_value=1, value=252)
+    n_steps = st.number_input("Steps per Path", min_value=2, value=252)
+    n_paths = st.number_input("Number of Paths", min_value=100, value=2000)
     seed = st.number_input("Random Seed (0 = random)", value=42)
 
     st.markdown("### P/E Drift Adjustment")
-    use_pe_adjustment = st.checkbox("P/E Ratio für Drift nutzen", value=False)
+    use_pe_adjustment = st.checkbox("Use P/E Ratio for Drift", value=False)
 
-    st.markdown("### VaR Konfidenzniveau")
-    var_confidence = st.slider("VaR Konfidenz", 0.90, 0.99, 0.95, 0.01)
+    st.markdown("### VaR Confidence Level")
+    var_confidence = st.slider("VaR Confidence", 0.90, 0.99, 0.95, 0.01)
 
-    submit = st.button("🚀 Daten laden & simulieren", use_container_width=True)
+    submit = st.button("🚀 Load Data & Simulate", use_container_width=True)
 
 if not submit:
-    st.info("👈 Bitte Parameter im Sidebar einstellen und auf 'Daten laden & simulieren' klicken.")
+    st.info("👈 Please set parameters in the sidebar and click 'Load Data & Simulate'.")
     st.stop()
 
 # ----- Fetch data -----
-with st.spinner("Lade Daten von Yahoo Finance..."):
+with st.spinner("Loading data from Yahoo Finance..."):
     try:
         df = yf.download(ticker, start=start_date, end=end_date, progress=False, auto_adjust=True)
         ticker_info = yf.Ticker(ticker).info
     except Exception as e:
-        st.error(f"Fehler beim Laden der Daten: {e}")
+        st.error(f"Error loading data: {e}")
         st.stop()
 
 if df.empty:
-    st.error("Keine Kursdaten gefunden. Bitte Ticker oder Datum prüfen.")
+    st.error("No price data found. Please check ticker or date.")
     st.stop()
 
 prices = df["Close"].squeeze().dropna()
@@ -153,18 +153,18 @@ if use_pe_adjustment and pe_ratio is not None and pe_ratio > 0:
     pe_adjustment = max(0.5, min(1.5, sector_pe / pe_ratio))
 
 # ----- Display KPIs -----
-st.markdown("### 📈 Marktdaten & Statistiken")
+st.markdown("### 📈 Market Data & Statistics")
 col1, col2, col3, col4, col5, col6 = st.columns(6)
 last_date_str = pd.Timestamp(prices.index[-1].date()).strftime('%Y-%m-%d')
-col1.metric("Letzter Preis", f"${last_price:.2f}", help=f"Stand: {last_date_str}")
-col2.metric("Annualisierte Drift (μ)", f"{mu_annual:.2%}")
-col3.metric("Historische Vol (σ)", f"{sigma_annual:.2%}")
+col1.metric("Last Price", f"${last_price:.2f}", help=f"Date: {last_date_str}")
+col2.metric("Annualized Drift (μ)", f"{mu_annual:.2%}")
+col3.metric("Historical Vol (σ)", f"{sigma_annual:.2%}")
 col4.metric("GARCH Vol", f"{garch_sigma_annual:.2%}")
 if pe_ratio:
     col5.metric("P/E Ratio", f"{pe_ratio:.1f}", help=f"Adjustment: {pe_adjustment:.2f}x")
 else:
     col5.metric("P/E Ratio", "N/A")
-col6.metric("Horizon", f"{horizon_days} Tage", help="Simulationszeitraum in die Zukunft")
+col6.metric("Horizon", f"{horizon_days} Days", help="Simulation period into the future")
 
 st.markdown("---")
 
@@ -200,10 +200,10 @@ if seed != 0:
 
 # Check if GARCH model fitted successfully
 if garch_result is None or garch_variance is None:
-    st.error("GARCH(1,1) Modell konnte nicht angepasst werden. Bitte überprüfen Sie die Daten oder versuchen Sie einen anderen Zeitraum.")
+    st.error("GARCH(1,1) model could not be fitted. Please check the data or try a different period.")
     st.stop()
 
-with st.spinner("Führe GARCH(1,1) + GBM Monte Carlo Simulationen durch..."):
+with st.spinner("Running GARCH(1,1) + GBM Monte Carlo simulations..."):
     # Run single simulation with GARCH volatility
     sim_baseline = simulate_garch_gbm(last_price, mu_baseline, garch_variance, n_steps, n_paths)
     results['GARCH(1,1) + GBM'] = sim_baseline
@@ -224,8 +224,8 @@ today_date = last_trading_date
 today_date_dt = today_date.to_pydatetime()
 
 st.info(
-    f"📅 **Simulationszeitraum**: {today_date.strftime('%Y-%m-%d')} "
-    f"→ **{horizon_end_date.strftime('%Y-%m-%d')}** ({horizon_days} Handelstage)"
+    f"📅 **Simulation Period**: {today_date.strftime('%Y-%m-%d')} "
+    f"→ **{horizon_end_date.strftime('%Y-%m-%d')}** ({horizon_days} Trading Days)"
 )
 
 # ----- VaR and Expected Shortfall -----
@@ -244,15 +244,15 @@ def calculate_risk_metrics(final_prices, S0, confidence=0.95):
 
 # ----- Visualization Tabs -----
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "📊 Fan Chart & Szenarien",
-    "📉 Risikoanalyse (VaR/ES)",
-    "📈 Verteilung Endpreise",
-    "🔄 Rolling Statistiken",
-    "📋 Daten Export"
+    "📊 Fan Chart & Szenarios",
+    "📉 Risk Analyses (VaR/ES)",
+    "📈 Distribution Prices",
+    "🔄 Rolling Statistics",
+    "📋 Data Export"
 ])
 
 with tab1:
-    st.subheader("Historischer Kurs & Monte Carlo Fan Chart")
+    st.subheader("Historical Prices & Monte Carlo Fan Chart")
 
     for method_name, sim_matrix in results.items():
         st.markdown(f"#### {method_name}")
@@ -265,7 +265,7 @@ with tab1:
             x=prices.index,
             y=prices.values,
             mode='lines',
-            name='Historisch',
+            name='Historical',
             line=dict(color='black', width=2)
         ))
 
@@ -345,7 +345,7 @@ with tab1:
         st.plotly_chart(fig, use_container_width=True)
 
 with tab2:
-    st.subheader(f"📉 Value-at-Risk (VaR) & Expected Shortfall @ {var_confidence:.0%} Konfidenz")
+    st.subheader(f"📉 Value-at-Risk (VaR) & Expected Shortfall @ {var_confidence:.0%} Confidence")
 
     for method_name, sim_matrix in results.items():
         sim_df = pd.DataFrame(sim_matrix, index=sim_index)
@@ -357,10 +357,10 @@ with tab2:
 
         st.markdown(f"#### {method_name}")
         col1, col2, col3, col4 = st.columns(4)
-        col1.metric("VaR Preis", f"${var_price:.2f}", f"{var_return:.2%}")
+        col1.metric("VaR Price", f"${var_price:.2f}", f"{var_return:.2%}")
         col2.metric("Expected Shortfall", f"${es_price:.2f}", f"{es_return:.2%}")
-        col3.metric("Median Preis", f"${final_prices.median():.2f}")
-        col4.metric("Mittelwert", f"${final_prices.mean():.2f}")
+        col3.metric("Median Price", f"${final_prices.median():.2f}")
+        col4.metric("Mean Price", f"${final_prices.mean():.2f}")
 
         # Risk distribution plot
         fig = go.Figure()
@@ -370,7 +370,7 @@ with tab2:
         fig.add_trace(go.Histogram(
             x=returns,
             nbinsx=100,
-            name='Rendite-Verteilung',
+            name='Return distribution',
             marker_color='lightblue'
         ))
 
@@ -392,9 +392,9 @@ with tab2:
         )
 
         fig.update_layout(
-            title=f"Rendite-Verteilung nach {horizon_days} Tagen",
-            xaxis_title="Rendite (%)",
-            yaxis_title="Häufigkeit",
+            title=f"Return Distribution after {horizon_days} Days",
+            xaxis_title="Return (%)",
+            yaxis_title="Frequency",
             template='plotly_white',
             height=400
         )
@@ -402,7 +402,7 @@ with tab2:
         st.plotly_chart(fig, use_container_width=True)
 
 with tab3:
-    st.subheader("📈 Verteilung der simulierten Endpreise")
+    st.subheader("📈 Distribution of simulated final prices")
 
     # Comparison of all methods
     fig = go.Figure()
@@ -427,14 +427,14 @@ with tab3:
         line_dash="solid",
         line_color="black",
         line_width=2,
-        annotation_text=f"Aktuell: ${last_price:.2f}",
+        annotation_text=f"Current: ${last_price:.2f}",
         annotation_position="top"
     )
 
     fig.update_layout(
-        title=f"Verteilung der Endpreise nach {horizon_days} Tagen",
-        xaxis_title="Preis ($)",
-        yaxis_title="Häufigkeit",
+        title=f"Distribution of Final Prices after {horizon_days} Days",
+        xaxis_title="Price ($)",
+        yaxis_title="Frequency",
         barmode='overlay',
         template='plotly_white',
         height=500
@@ -443,7 +443,7 @@ with tab3:
     st.plotly_chart(fig, use_container_width=True)
 
     # Quantile table
-    st.markdown("### Quantile der simulierten Endpreise")
+    st.markdown("### Quantiles of Simulated Final Prices")
 
     quantile_data = {}
     quantiles = [0.01, 0.05, 0.10, 0.25, 0.50, 0.75, 0.90, 0.95, 0.99]
@@ -461,39 +461,39 @@ with tab3:
     st.dataframe(quantile_df.style.format("${:.2f}"), use_container_width=True)
 
 with tab4:
-    st.subheader("🔄 Rolling Statistiken (30 & 60 Tage)")
+    st.subheader("🔄 Rolling Statistics (30 & 60 Days)")
 
     fig = make_subplots(
         rows=2, cols=1,
-        subplot_titles=("Rolling Drift (μ)", "Rolling Volatilität (σ)"),
+        subplot_titles=("Rolling Drift (μ)", "Rolling Volatility (σ)"),
         vertical_spacing=0.15
     )
 
     # Rolling Drift
     fig.add_trace(
-        go.Scatter(x=rolling_30d_mu.index, y=rolling_30d_mu * 100, name='30-Tage μ', line=dict(color='blue')),
+        go.Scatter(x=rolling_30d_mu.index, y=rolling_30d_mu * 100, name='30-Day μ', line=dict(color='blue')),
         row=1, col=1
     )
     fig.add_trace(
-        go.Scatter(x=rolling_60d_mu.index, y=rolling_60d_mu * 100, name='60-Tage μ', line=dict(color='lightblue')),
+        go.Scatter(x=rolling_60d_mu.index, y=rolling_60d_mu * 100, name='60-Day μ', line=dict(color='lightblue')),
         row=1, col=1
     )
     fig.add_hline(y=mu_annual * 100, line_dash="dash", line_color="gray", row=1, col=1)
 
     # Rolling Volatility
     fig.add_trace(
-        go.Scatter(x=rolling_30d_sigma.index, y=rolling_30d_sigma * 100, name='30-Tage σ', line=dict(color='red')),
+        go.Scatter(x=rolling_30d_sigma.index, y=rolling_30d_sigma * 100, name='30-Day σ', line=dict(color='red')),
         row=2, col=1
     )
     fig.add_trace(
-        go.Scatter(x=rolling_60d_sigma.index, y=rolling_60d_sigma * 100, name='60-Tage σ', line=dict(color='pink')),
+        go.Scatter(x=rolling_60d_sigma.index, y=rolling_60d_sigma * 100, name='60-Day σ', line=dict(color='pink')),
         row=2, col=1
     )
     fig.add_hline(y=sigma_annual * 100, line_dash="dash", line_color="gray", row=2, col=1)
 
-    fig.update_xaxes(title_text="Datum", row=2, col=1)
-    fig.update_yaxes(title_text="Annualisiert (%)", row=1, col=1)
-    fig.update_yaxes(title_text="Annualisiert (%)", row=2, col=1)
+    fig.update_xaxes(title_text="Date", row=2, col=1)
+    fig.update_yaxes(title_text="Annualized (%)", row=1, col=1)
+    fig.update_yaxes(title_text="Annualized (%)", row=2, col=1)
 
     fig.update_layout(
         height=700,
@@ -505,16 +505,16 @@ with tab4:
 
     # Latest values
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("30d μ (aktuell)", f"{rolling_30d_mu.iloc[-1]:.2%}")
-    col2.metric("60d μ (aktuell)", f"{rolling_60d_mu.iloc[-1]:.2%}")
-    col3.metric("30d σ (aktuell)", f"{rolling_30d_sigma.iloc[-1]:.2%}")
-    col4.metric("60d σ (aktuell)", f"{rolling_60d_sigma.iloc[-1]:.2%}")
+    col1.metric("30d μ (current)", f"{rolling_30d_mu.iloc[-1]:.2%}")
+    col2.metric("60d μ (current)", f"{rolling_60d_mu.iloc[-1]:.2%}")
+    col3.metric("30d σ (current)", f"{rolling_30d_sigma.iloc[-1]:.2%}")
+    col4.metric("60d σ (current)", f"{rolling_60d_sigma.iloc[-1]:.2%}")
 
 with tab5:
-    st.subheader("📋 Daten Export")
+    st.subheader("📋 Data Export")
 
     # Select which simulation to export
-    export_method = st.selectbox("Methode zum Exportieren", list(results.keys()))
+    export_method = st.selectbox("Method for Export", list(results.keys()))
 
     sim_matrix = results[export_method]
     sim_df = pd.DataFrame(sim_matrix, index=sim_index)
@@ -531,15 +531,15 @@ with tab5:
         mime='text/csv'
     )
 
-    st.caption(f"Shape: {sim_df.shape[0]} Zeitschritte × {sim_df.shape[1]} Pfade")
+    st.caption(f"Shape: {sim_df.shape[0]} Time Steps × {sim_df.shape[1]} Paths")
 
     # Export statistics
-    st.markdown("### Export Statistiken")
+    st.markdown("### Export Statistics")
     final_prices = sim_df.iloc[-1]
 
     stats_data = {
-        "Metrik": ["Mittelwert", "Median", "Std. Abweichung", "Min", "Max", "5% Quantile", "95% Quantile"],
-        "Wert": [
+        "Metric": ["Mean", "Median", "Std. Deviation", "Min", "Max", "5% Quantile", "95% Quantile"],
+        "Value": [
             f"${final_prices.mean():.2f}",
             f"${final_prices.median():.2f}",
             f"${final_prices.std():.2f}",
@@ -554,49 +554,49 @@ with tab5:
 
 # ----- Notes & Assumptions -----
 st.markdown("---")
-with st.expander("ℹ️ Methodik & Hinweise"):
-    st.markdown("""
-    ### GARCH(1,1) + GBM Methode
+with st.expander("ℹ️ Methodology & Notes", expanded=False):
+   st.markdown("""
+   ### GARCH(1,1) + GBM Method
 
-    **GARCH(1,1) - Generalized Autoregressive Conditional Heteroskedasticity**
-    - Modelliert zeitvariante Volatilität
-    - Erfasst Volatility Clustering (volatile Perioden folgen auf volatile Perioden)
-    - Verwendet historische Daten zur Schätzung zukünftiger Volatilität
-    - Prognostiziert Volatilität für den gesamten Simulationshorizont
+   **GARCH(1,1) - Generalized Autoregressive Conditional Heteroskedasticity**
+   - Models time-varying volatility
+   - Captures volatility clustering (volatile periods follow volatile periods)
+   - Uses historical data to estimate future volatility 
+   - Forecasts volatility for the entire simulation horizon
 
-    **GBM - Geometric Brownian Motion**
-    - Preispfade folgen einer log-normalen Verteilung
-    - Verwendet GARCH-prognostizierte Volatilität (statt konstanter σ)
-    - Drift (μ) basiert auf historischen logarithmischen Renditen
+   **GBM - Geometric Brownian Motion**
+   - Price paths follow a log-normal distribution
+   - Uses GARCH-forecasted volatility (instead of constant σ)
+   - Drift (μ) based on historical logarithmic returns
 
-    ### P/E Ratio Adjustment
+   ### P/E Ratio Adjustment
 
-    - Nutzt Forward P/E oder Trailing P/E als Fundamental-Indikator
-    - Niedrige P/E → Drift erhöhen (potenziell unterbewertet)
-    - Hohe P/E → Drift senken (potenziell überbewertet)
-    - Anpassungsbereich: 0.5x bis 1.5x
+   - Uses Forward P/E or Trailing P/E as fundamental indicator
+   - Low P/E → Increase drift (potentially undervalued)
+   - High P/E → Decrease drift (potentially overvalued) 
+   - Adjustment range: 0.5x to 1.5x
 
-    ### Risikokennzahlen
+   ### Risk Metrics
 
-    - **Value-at-Risk (VaR)**: Maximaler erwarteter Verlust bei gegebenem Konfidenzniveau
-    - **Expected Shortfall (ES/CVaR)**: Durchschnittlicher Verlust im Worst-Case-Szenario
-    - **Rolling Statistics**: 30- und 60-Tage Fenster für μ und σ
+   - **Value-at-Risk (VaR)**: Maximum expected loss at given confidence level
+   - **Expected Shortfall (ES/CVaR)**: Average loss in worst-case scenario
+   - **Rolling Statistics**: 30 and 60-day windows for μ and σ
 
-    ### Wichtige Hinweise
+   ### Important Notes
 
-    - Alle Simulationen sind **rein illustrativ** und keine Anlageberatung
-    - Vergangenheitsperformance ist kein Indikator für zukünftige Ergebnisse
-    - GARCH-Modelle basieren auf historischen Mustern und können Regimewechsel nicht vorhersagen
-    - Extremereignisse (Black Swans) werden möglicherweise unterschätzt
-    - Bei sehr volatilen Märkten kann die GARCH-Schätzung instabil werden
+   - All simulations are **purely illustrative** and not investment advice
+   - Past performance is not indicative of future results
+   - GARCH models are based on historical patterns and cannot predict regime changes
+   - Extreme events (Black Swans) may be underestimated
+   - GARCH estimation may become unstable in highly volatile markets
 
-    ### Vorteile von GARCH(1,1)
+   ### Advantages of GARCH(1,1)
 
-    ✅ Erfasst Volatility Clustering
-    ✅ Realistischere Volatilitätsschätzung als konstante σ
-    ✅ Berücksichtigt Zeitvarianz der Marktbedingungen
-    ✅ Weit verbreitet in der Finanzindustrie
-    """)
+   ✅ Captures volatility clustering
+   ✅ More realistic volatility estimation than constant σ
+   ✅ Accounts for time-varying market conditions
+   ✅ Widely used in the financial industry
+   """)
 
 st.markdown("---")
 st.caption("Built with Streamlit, yfinance and arch | Data: Yahoo Finance | No Investment Advice")

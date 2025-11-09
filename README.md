@@ -2,6 +2,8 @@
 
 A professional Streamlit tool for Monte Carlo simulations of stock prices using GARCH(1,1) volatility modeling.
 
+Find a demo on https://equity-explorer.streamlit.app/
+
 ## 📋 Overview
 
 This tool combines **GARCH(1,1)** (Generalized Autoregressive Conditional Heteroskedasticity) with **Geometric Brownian Motion (GBM)** to create realistic stock price simulations with time-varying volatility.

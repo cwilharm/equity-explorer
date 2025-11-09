@@ -268,16 +268,6 @@ Dieses Tool ist ein Bildungsprojekt. Verbesserungsvorschläge und Feedback sind 
 
 Dieses Projekt ist für Bildungs- und Forschungszwecke frei verfügbar.
 
-## 👤 Autor
-
-Erstellt mit Claude Code und Streamlit.
-
-## 🆘 Support
-
-Bei Fragen oder Problemen:
-1. Prüfen Sie die "Bekannte Issues" Sektion
-2. Stellen Sie sicher, dass alle Dependencies aktuell sind
-3. Überprüfen Sie die Streamlit-Logs in der Konsole
 
 ---
 

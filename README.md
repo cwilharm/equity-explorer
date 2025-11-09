@@ -260,3 +260,4 @@ This project is freely available for educational and research purposes.
 **Built with**: Streamlit, yfinance, arch, plotly, pandas, numpy
 **Data Source**: Yahoo Finance
 **⚠️ No Investment Advice**
+
